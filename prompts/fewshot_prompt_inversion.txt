@@ -1,0 +1,19 @@
+Given a dialect label, generate a sentence in that dialect. Return the result as JSON with keys "label" and "sentence".
+
+Examples:
+1. Label: IRAQ
+   Sentence: "يا جماعة، منو يعرف إيمتى راح يخلص هذا المشروع؟"
+2. Label: YEM
+   Sentence: "يا ولد، ليش ما رديت على اتصالاتي؟"
+3. Label: GULF
+   Sentence: "ما يصير الواحد ينسى أهله وأصحابه، لازم نتواصل وياهم دايماً."
+
+Task:
+Generate a sentence for the following dialect label:
+Label: {target_label}
+
+Return the output as JSON:
+{
+  "label": "{target_label}",
+  "sentence": "<generated_sentence>"
+}
