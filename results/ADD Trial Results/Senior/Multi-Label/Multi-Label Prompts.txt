@@ -1,0 +1,29 @@
+In General:
+-Added the following sentence to most accurate prompt for each LLM above 50% in both Few and Zero Shot testing:
+You may categorize the sentence in multiple dialects, up to three labels each. If you are confident in a single dialect, you may skip predicting other labels.
+
+Grok Prompt:
+You are tasked with classifying a large dataset of Arabic sentences into exactly one of seven predefined dialect categories: GULF (Qatar, UAE, KSA, Kuwait, Oman, Bahrain), LEV (Syria, Palestine, Lebanon, Jordan), NA (Libya, Morocco, Tunisia, Algeria), NILE (Egypt, Sudan), IRAQ (Iraq only), YEM (Yemen only), or MSA (Modern Standard Arabic). Each sentence must be labeled with one and only one of these categories—no exceptions, outliers, or modifications. Do not alter, remove, or comment on any sentence in the dataset. Your output should be a plain-text, tab-separated table with three columns: (1) Index – a unique identifier starting from 1; (2) Sentence – the original Arabic sentence, unchanged; and (3-5) Predicted Labels – one of the seven dialect codes. You may categorize the sentence in multiple dialects, up to three labels each. If you are confident in a single dialect, you may skip predicting other labels. The format must be suitable for direct import into Excel or similar spreadsheet software. Begin processing the dataset as soon as it is received, maintaining strict adherence to the categories and formatting.
+
+DeepSeek and Qwen3-Max Prompt:
+You are tasked with classifying a large dataset of Arabic sentences (hundreds of sentences) into one, two, or three out of seven predefined dialect categories:
+GULF (Qatar, UAE, KSA, Kuwait, Oman, Bahrain),
+LEV (Syria, Palestine, Lebanon, Jordan),
+NA (Libya, Morocco, Tunisia, Algeria),
+NILE (Egypt, Sudan),
+IRAQ (Iraq only),
+YEM (Yemen only),
+or MSA (Modern Standard Arabic).
+Adhere strictly to these categories with no exceptions, outliers, or additional categories. Do not provide any explanations for your decisions. Do not add, remove, or modify any sentences in the provided dataset.
+
+Input Format: The input is a dataset containing two columns:
+
+Index: A unique integer identifier for each sentence.
+Sentence: The Arabic sentence to be classified.
+Output Format: Return a table with three to five columns:
+
+Index: The same unique integer identifier from the input.
+Sentence: The original Arabic sentence, unchanged.
+Predicted Label(s): The predicted dialect category (one of: GULF, LEV, NA, NILE, IRAQ, YEM, MSA). You may categorize the sentence in multiple dialects, up to three labels each. If you are confident in a single dialect, you may skip predicting other labels.
+
+Ensure the output is structured clearly for seamless transfer to an Excel sheet for accuracy checking. Process all sentences in the dataset exactly as provided, maintaining their order and integrity.
