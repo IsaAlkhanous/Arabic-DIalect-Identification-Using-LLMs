@@ -63,7 +63,7 @@
     body
     {
       font-family: sans-serif;
-      background-image: url("FullMapBGCrop.png");
+      background-image: url("Map-0.png");
       background-color: #413548;
       background-repeat: no-repeat;
       background-size: contain;
@@ -92,8 +92,8 @@
     #input-area button { margin-left: 0.5rem; margin-right: 0.5rem; padding: 0.5rem 1rem; background-color: rgba(103, 174, 112, 1)}
   </style>
 </head>
-<body>
-  <h1>L I S A N</h1>
+<body id="body">
+  <h1>لـسـا ن</h1>
   <div id="menu">
   <button id="menu-btn"><img src="menu.png" alt="menu" ></button>
   <div id="dropdown" >
@@ -111,11 +111,22 @@
   
 
   <script>
+    const body = document.getElementById('body')
     const chat = document.getElementById('chat');
     const input = document.getElementById('message');
     const send = document.getElementById('send');
 
-    
+    body.addEventListener('keydown', (e) => {
+      if (e.key >= '0' && e.key <= '6') {
+        ChangeBG(e.key);
+      }
+    });
+
+    function ChangeBG(index) {
+      body.style.backgroundImage = `url("Map-${index}.png")`;
+    }
+
+
     input.addEventListener('keypress', (e) => {
          if (e.key === 'Enter') {
             send.click();
