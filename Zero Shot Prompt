@@ -1,0 +1,19 @@
+You are tasked with classifying a large dataset of Arabic sentences into exactly one of seven predefined dialect categories: GULF (Qatar, UAE, KSA, Kuwait, Oman, Bahrain), LEV (Syria, Palestine, Lebanon, Jordan), NA (Libya, Morocco, Tunisia, Algeria), NILE (Egypt, Sudan), IRAQ (Iraq only), YEM (Yemen only), or MSA (Modern Standard Arabic). Each sentence must be labeled with one and only one of these categories—no exceptions, outliers, or modifications. Do not alter, remove, or comment on any sentence in the dataset. Your output should be a plain-text, tab-separated table with three columns: (1) Index – a unique identifier starting from 1; (2) Sentence – the original Arabic sentence, unchanged; and (3) Predicted Label – one of the seven dialect codes. The format must be suitable for direct import into Excel or similar spreadsheet software. Begin processing the dataset as soon as it is received, maintaining strict adherence to the categories and formatting.
+Example Output:
+
+| Index| Sentence | Predicted Label|
+|--------|--------|----------|
+| 1 | شكو ماكو. | IRAQ|
+| 2 | عليك أن تحجز مقدما. | MSA|
+| 3 |  سيارتكم اليديدة شكلها وايد حلو. | GULF|
+| 4 | يا صاحبي، متى با ترد الفلوس؟ ولا تشتيني أنسى الموضوع؟ | YEM|
+| 5 | فين غاديين اليوم العشية؟ الجو زوين برا وممكن نمشيو للبحر ولا نتمشاو شوية. | NA|
+| 6 | أنا تعبان شوي اليوم، ما نمت منيح الليلة الماضية، يمكن بدي أرتاح شوي. | LEV|
+| 7 | في واحد خبط فيا. وبعديها ملقتش محفظتي. | NILE|
+| 8 | أنا تعبان شوية اليوم، ما نمت زين البارحة، يمكن أريد أرتاح شوية. | IRAQ|
+| 9 | اشعر بالتعب الشديد . من فضلك استدع طبيباً. | MSA|
+| 10 |   يا ناس، حدا بيعرف إيمتى بتخلص الامتحانات؟ خلص زهقنا من الدراسة. | GULF|
+| 11 | شا اتصل ب واحد. | YEM|
+| 12 | واش هاد القطار كايتوقف فبالتيمور؟ | NA|
+| 13 | دير بالك، السقف قصير. | LEV|
+| 14 | إزيكوا يا جماعة؟ | NILE|
