@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LLM Chat</title>
+  <style>
+    body { font-family: sans-serif; background: #fafafa; display: flex; flex-direction: column; align-items: center; }
+    #chat { width: 90%; max-width: 600px; background: white; border-radius: 8px; padding: 1rem; box-shadow: 0 2px 6px rgba(0,0,0,0.1); overflow-y: auto; height: 70vh; margin-bottom: 1rem; }
+    .message { margin: 0.5rem 0; }
+    .user { text-align: right; color: #007bff; }
+    .assistant { text-align: left; color: #222; }
+    #input-area { display: flex; width: 90%; max-width: 600px; }
+    #input-area input { flex: 1; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc; }
+    #input-area button { margin-left: 0.5rem; padding: 0.5rem 1rem; }
+  </style>
+</head>
+<body>
+  <h2>LLM Chat</h2>
+  <div id="chat"></div>
+  <div id="input-area">
+    <input type="text" id="message" placeholder="Type a message..." />
+    <button id="send">Send</button>
+  </div>
+
+  <script>
+    const chat = document.getElementById('chat');
+    const input = document.getElementById('message');
+    const send = document.getElementById('send');
+
+    send.addEventListener('click', async () => {
+      const text = input.value.trim();
+      if (!text) return;
+      appendMessage(text, 'user');
+      input.value = '';
+
+      appendMessage('...', 'assistant'); // loading indicator
+
+      try {
+        const res = await fetch('https://your-n8n-server.com/webhook/llm-chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text })
+        });
+        const data = await res.json();
+        replaceLastMessage(data.final_response, 'assistant');
+      } catch (err) {
+        replaceLastMessage('Error contacting server.', 'assistant');
+      }
+    });
+
+    function appendMessage(text, role) {
+      const div = document.createElement('div');
+      div.className = 'message ' + role;
+      div.textContent = text;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function replaceLastMessage(text, role) {
+      const messages = chat.getElementsByClassName(role);
+      if (messages.length > 0) {
+        messages[messages.length - 1].textContent = text;
+      }
+    }
+  </script>
+</body>
+</html>

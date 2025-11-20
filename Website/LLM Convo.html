@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>L I S A N</title>
+  <style>
+    h1 {
+      text-shadow: 0 0 10px #fff;
+      font-size: 5vw;
+      margin-bottom: 10px;
+      margin-top: 10px;
+      font-family: serif;
+      color:#222;
+    }
+    #menu {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+    }
+
+    #menu-btn {
+      padding: 6px 10px;
+      background: rgba(103,174,112,1);
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    #dropdown {
+      position: absolute;
+      right: 0;
+      top: 40px;
+      background: rgba(103,174,112,1);
+      border-radius: 10px;
+      max-height: 0;
+      opacity: 0;
+      transition: 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #dropdown button {
+      border: none;
+      background: none;
+      padding: 8px 12px;
+      text-align: right;
+      cursor: pointer;
+    }
+
+    #dropdown button:hover {
+      background: rgba(0,0,0,0.1);
+    }
+
+    #dropdown.open {
+      max-height: 200px;
+      opacity: 1;
+    }
+
+    body {
+      font-family: sans-serif;
+      background-image: url("Map-2.png");
+      background-color: #413548;
+      background-blend-mode: normal;
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+      background-attachment: fixed;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #chat {
+      font-family: sans-serif;
+      width: 90%;
+      max-width: 600px;
+      background: rgba(140, 127, 147, 0.4);
+      border-radius: 8px;
+      padding: 0.5rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      overflow-y: auto;
+      height: 70vh;
+      margin-bottom: 1rem;
+    }
+
+    .message {
+      margin: 0.5rem 0;
+      padding: 5px;
+      border-radius: 8px;
+      line-height: 1.5;
+    }
+
+    .user {
+      text-align: right;
+      color: #222;
+      background-color: rgba(103, 174, 112, 0.6);
+    }
+
+    .assistant {
+      text-align: left;
+      color: #222;
+      background-color: rgba(140, 127, 147, 0.6);
+    }
+
+    #input-area {
+      display: flex;
+      width: 90%;
+      max-width: 600px;
+    }
+
+    ::placeholder { text-align: right; }
+
+    #input-area input {
+      flex: 1;
+      padding: 0.5rem;
+      border-radius: 8px;
+      border: 5px solid rgba(103, 174, 112, 1);
+    }
+
+    #input-area button {
+      margin-left: 0.5rem;
+      margin-right: 0.5rem;
+      padding: 0.5rem 1rem;
+      background-color: rgba(103, 174, 112, 1);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body id="body">
+  <h1>لـسـا ن</h1>
+
+  <div id="menu">
+    <button id="menu-btn"><img src="menu.png" alt="menu" ></button>
+    <div id="dropdown">
+      <button>تسجيل الدخول</button>
+      <button>الإعدادات</button>
+      <button>المحادثات السابقة</button>
+    </div>
+  </div>
+
+  <div id="chat"></div>
+
+  <div id="input-area">
+    <button id="attach"><img src="attach-pic.png" style="width: 20px; height: 20px;" alt="attach" ></button>
+    <button id="send">أرسل</button>
+    <input type="text" id="message" placeholder="كيف قد أساعدك اليوم؟" />
+  </div>
+
+  <script>
+    const chat = document.getElementById('chat');
+    const body = document.getElementById('body');
+    const input = document.getElementById('message');
+    const send = document.getElementById('send');
+
+    // Dropdown menu toggle
+    document.getElementById("menu-btn").onclick = () => {
+      document.getElementById("dropdown").classList.toggle("open");
+    };
+
+    // Chat message rendering functions
+    function appendMessage(text, role) {
+      const div = document.createElement('div');
+      div.className = 'message ' + role;
+      div.textContent = text;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    // Predefined Arabic dialogue (script)
+    const conversation = [
+      {role: 'user', text: 'مرحبا! إنت بتفهم علي إذا حكيت باللهجة؟'},
+      {role: 'assistant', text: 'أكيد بفهم عليك، احكي عادي متل ما بتحب. شو حابب نحكي اليوم؟'},
+      {role: 'user', text: 'والله زهقان، فكرت إحكي معك شوي.'},
+      {role: 'assistant', text: 'منيح عملت! شو السبب بالزهق؟ الشغل؟ الدراسة؟ ولا هيك ملل عام؟'},
+      {role: 'user', text: 'لا الدراسة، ضغوطات كتير والله.'},
+      {role: 'assistant', text: 'بعرف الشعور، خصوصاً آخر الفصل. شو بتدرس إذا مو مانع؟'},
+      {role: 'user', text: 'علوم حاسوب، وكل شوي مشاريع وتسليمات.'},
+      {role: 'assistant', text: 'آه حلو، يعني بتتعامل مع الكودات متلي 😄 شو بتستخدم أكتر شي؟'},
+      {role: 'user', text: 'هلأ شغال على بايثون وفلَتر شوي هيك.'},
+      {role: 'assistant', text: 'حلو كتير، فلَتر قوي، خصوصاً إذا ناوي تعمل تطبيقات موبايل. بدك أساعدك بشي بالكود؟'},
+      {role: 'user', text: 'والله ممكن بعدين، هلق خلينا نحكي شوي لافضفض 😂'},
+      {role: 'assistant', text: 'أكيد، أنا هون مشان هيك كمان. احكي شو مضايقك بالضبط؟'},
+      {role: 'user', text: 'بحس إني ما عم بلحق، كل يوم في تسليم جديد، والوقت دايمًا ضدّي.'},
+      {role: 'assistant', text: 'إي بعرف، بس لا تنسى ترتاح شوي بين الشغل. العقل إذا تعب ما بيعطيك شي.'},
+      {role: 'user', text: 'صح، بحاول أوازن، بس صعب والله.'},
+      {role: 'assistant', text: 'ما في شي سهل، بس شوي شوي بتتعود. المهم ما توقف، وكل تعبك هلأ رح تشوف نتيجته بعدين.'},
+      {role: 'user', text: 'يعطيك العافية، كلامك ريّحني صراحة.'},
+      {role: 'assistant', text: 'تسلم، وأنا دايمًا جاهز إذا بدك تحكي أو تحتاج مساعدة.'}
+    ];
+
+    // Function to play conversation automatically
+    async function playConversation() {
+      for (const line of conversation) {
+        appendMessage(line.text, line.role);
+        await new Promise(r => setTimeout(r, 1500)); // delay between lines
+      }
+    }
+
+    // Start conversation on load
+    window.onload = playConversation;
+
+    // Keep send button functional (manual messages still possible)
+    send.addEventListener('click', () => {
+      const text = input.value.trim();
+      if (!text) return;
+      appendMessage(text, 'user');
+      input.value = '';
+      setTimeout(() => appendMessage('🙂 تمام، احكيلي أكتر.', 'assistant'), 1000);
+    });
+  </script>
+</body>
+</html>
