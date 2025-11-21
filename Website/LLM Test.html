@@ -17,8 +17,13 @@
     }
 
     @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
+      0%, 100% { transform: scale(1) translateX(0); }
+      50% { transform: scale(1.05) translateX(0); }
+    }
+
+    @keyframes pulseShifted {
+      0%, 100% { transform: scale(1) translateX(-150px); }
+      50% { transform: scale(1.05) translateX(-150px); }
     }
 
     @keyframes slideInLeft {
@@ -287,8 +292,8 @@
       position: fixed;
       right: 0;
       top: 0;
-      width: 33.333%;
-      min-width: 400px;
+      width: 40%;
+      min-width: 450px;
       height: 100vh;
       background: linear-gradient(135deg, #24132e, #31203a);
       backdrop-filter: blur(10px);
@@ -448,6 +453,12 @@
       animation: fadeIn 1s ease-out;
       max-width: 90%;
       width: fit-content;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #dialect-panel.shift-left {
+      margin-right: calc(40.75%);
+      margin-left: auto;
     }
 
     .panel-header {
@@ -473,7 +484,7 @@
       text-align: center;
       transition: all 0.3s ease;
       border: 1px solid rgba(255,255,255,0.1);
-      min-width: 20px;
+      min-width: 70px;
     }
 
     .dialect-counter:hover {
@@ -527,6 +538,11 @@
       #dialect-panel {
         bottom: 0;
         padding: 0.6rem 1rem;
+      }
+
+      #dialect-panel.shift-left {
+        margin-right: auto;
+        margin-left: auto;
       }
 
       .dialect-grid {
@@ -700,6 +716,7 @@
     const settingsOverlay = document.getElementById('settings-overlay');
     const closeSettings = document.getElementById('close-settings');
     const title = document.querySelector('h1');
+    const dialectPanel = document.getElementById('dialect-panel');
 
     // Dialect counters state
     const dialectCounts = {
@@ -749,6 +766,8 @@
     // Toggle right sidebar
     chatToggle.addEventListener('click', () => {
       rightSidebar.classList.toggle('open');
+      dialectPanel.classList.toggle('shift-left');
+      
       // Fade title when chat is open
       if (rightSidebar.classList.contains('open')) {
         title.style.opacity = '0.3';
