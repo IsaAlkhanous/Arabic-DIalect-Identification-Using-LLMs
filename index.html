@@ -815,7 +815,7 @@
         data.choices?.[0]?.message?.content ??
         'ما في رد من السيرفر';
 
-      replaceLastMessage(reply);
+      replaceLastMessage(final_response);
 
       if (data.detected_dialect) {
         updateDialectCount(data.detected_dialect);
