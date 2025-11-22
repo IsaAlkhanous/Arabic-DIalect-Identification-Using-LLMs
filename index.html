@@ -704,142 +704,150 @@
   </div>
 
   <script>
-    const body = document.getElementById('body');
-    const chat = document.getElementById('chat');
-    const input = document.getElementById('message');
-    const send = document.getElementById('send');
-    const menuBtn = document.getElementById('menu-btn');
-    const leftSidebar = document.getElementById('left-sidebar');
-    const chatToggle = document.getElementById('chat-toggle');
-    const rightSidebar = document.getElementById('right-sidebar');
-    const settingsBtn = document.getElementById('settings-btn');
-    const settingsOverlay = document.getElementById('settings-overlay');
-    const closeSettings = document.getElementById('close-settings');
-    const title = document.querySelector('h1');
-    const dialectPanel = document.getElementById('dialect-panel');
+  const body = document.getElementById('body');
+  const chat = document.getElementById('chat');
+  const input = document.getElementById('message');
+  const send = document.getElementById('send');
+  const menuBtn = document.getElementById('menu-btn');
+  const leftSidebar = document.getElementById('left-sidebar');
+  const chatToggle = document.getElementById('chat-toggle');
+  const rightSidebar = document.getElementById('right-sidebar');
+  const settingsBtn = document.getElementById('settings-btn');
+  const settingsOverlay = document.getElementById('settings-overlay');
+  const closeSettings = document.getElementById('close-settings');
+  const title = document.querySelector('h1');
+  const dialectPanel = document.getElementById('dialect-panel');
 
-    // Dialect counters state
-    const dialectCounts = {
-      MSA: 0,
-      NA: 0,
-      NILE: 0,
-      LEV: 0,
-      IRAQ: 0,
-      YEM: 0,
-      GULF: 0
-    };
+  // ✅ Keep URL in one place (swap to /webhook/ when live)
+  const WEBHOOK_URL =
+    'https://progquack.app.n8n.cloud/webhook-test/a4d553d5-73ce-409b-8f6e-703bfc6c83d2';
 
-    // Function to update dialect counter
-    function updateDialectCount(dialect) {
-      if (dialectCounts.hasOwnProperty(dialect)) {
-        dialectCounts[dialect]++;
-        const counter = document.querySelector(`[data-dialect="${dialect}"]`);
-        if (counter) {
-          const countDisplay = counter.querySelector('.dialect-count');
-          countDisplay.textContent = dialectCounts[dialect];
-          
-          // Add active animation
-          counter.classList.add('active');
-          setTimeout(() => {
-            counter.classList.remove('active');
-          }, 500);
-        }
+  let isSending = false;
+
+  // Dialect counters state
+  const dialectCounts = {
+    MSA: 0, NA: 0, NILE: 0, LEV: 0, IRAQ: 0, YEM: 0, GULF: 0
+  };
+
+  function updateDialectCount(dialect) {
+    if (dialectCounts.hasOwnProperty(dialect)) {
+      dialectCounts[dialect]++;
+      const counter = document.querySelector(`[data-dialect="${dialect}"]`);
+      if (counter) {
+        const countDisplay = counter.querySelector('.dialect-count');
+        countDisplay.textContent = dialectCounts[dialect];
+
+        counter.classList.add('active');
+        setTimeout(() => counter.classList.remove('active'), 500);
       }
     }
+  }
 
-    // Keyboard shortcuts for background
-    body.addEventListener('keydown', (e) => {
-      if (e.key >= '0' && e.key <= '6') {
-        ChangeBG(e.key);
+  body.addEventListener('keydown', (e) => {
+    if (e.key >= '0' && e.key <= '6') ChangeBG(e.key);
+  });
+
+  function ChangeBG(index) {
+    body.style.backgroundImage = `url("Map-${index}.png")`;
+  }
+
+  menuBtn.addEventListener('click', () => {
+    leftSidebar.classList.toggle('open');
+  });
+
+  chatToggle.addEventListener('click', () => {
+    rightSidebar.classList.toggle('open');
+    dialectPanel.classList.toggle('shift-left');
+
+    title.style.opacity = rightSidebar.classList.contains('open') ? '0.3' : '1';
+  });
+
+  settingsBtn.addEventListener('click', () => {
+    settingsOverlay.classList.add('open');
+  });
+
+  closeSettings.addEventListener('click', () => {
+    settingsOverlay.classList.remove('open');
+  });
+
+  settingsOverlay.addEventListener('click', (e) => {
+    if (e.target === settingsOverlay) settingsOverlay.classList.remove('open');
+  });
+
+  // Chat functionality
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') send.click();
+  });
+
+  send.addEventListener('click', async () => {
+    if (isSending) return;
+
+    const text = input.value.trim();
+    if (!text) return;
+
+    appendMessage(text, 'user');
+    input.value = '';
+
+    // ✅ visible loading bubble
+    appendMessage('...', 'assistant loading');
+
+    isSending = true;
+    send.disabled = true;
+
+    try {
+      const res = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text })
+      });
+
+      if (!res.ok) {
+        const errTxt = await res.text();
+        throw new Error(`Webhook failed ${res.status}: ${errTxt}`);
       }
-    });
 
-    function ChangeBG(index) {
-      body.style.backgroundImage = `url("Map-${index}.png")`;
+      const data = await res.json().catch(() => ({}));
+
+      // ✅ support multiple response shapes
+      const reply =
+        data.final_response ??
+        data.reply ??
+        data.choices?.[0]?.message?.content ??
+        'ما في رد من السيرفر';
+
+      replaceLastMessage(reply);
+
+      if (data.detected_dialect) {
+        updateDialectCount(data.detected_dialect);
+      }
+    } catch (err) {
+      console.error(err);
+      replaceLastMessage('هناك خطب ما في التواصل');
+    } finally {
+      isSending = false;
+      send.disabled = false;
+      input.focus();
     }
+  });
 
-    // Toggle left sidebar
-    menuBtn.addEventListener('click', () => {
-      leftSidebar.classList.toggle('open');
-    });
+  function appendMessage(text, role) {
+    const div = document.createElement('div');
+    div.className = 'message ' + role;
+    div.textContent = text;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+  }
 
-    // Toggle right sidebar
-    chatToggle.addEventListener('click', () => {
-      rightSidebar.classList.toggle('open');
-      dialectPanel.classList.toggle('shift-left');
-      
-      // Fade title when chat is open
-      if (rightSidebar.classList.contains('open')) {
-        title.style.opacity = '0.3';
-      } else {
-        title.style.opacity = '1';
-      }
-    });
-
-    // Settings overlay
-    settingsBtn.addEventListener('click', () => {
-      settingsOverlay.classList.add('open');
-    });
-
-    closeSettings.addEventListener('click', () => {
-      settingsOverlay.classList.remove('open');
-    });
-
-    settingsOverlay.addEventListener('click', (e) => {
-      if (e.target === settingsOverlay) {
-        settingsOverlay.classList.remove('open');
-      }
-    });
-
-    // Chat functionality
-    input.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        send.click();
-      }
-    });
-
-    send.addEventListener('click', async () => {
-      const text = input.value.trim();
-      if (!text) return;
-      appendMessage(text, 'user');
-      input.value = '';
-
-      appendMessage('', 'assistant loading');
-
-      try {
-        const res = await fetch('https://progquack.app.n8n.cloud/webhook-test/a4d553d5-73ce-409b-8f6e-703bfc6c83d2', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: text })
-        });
-        const data = await res.json();
-        replaceLastMessage(data.final_response, 'assistant');
-        
-        // Check if dialect was detected in response
-        if (data.detected_dialect) {
-          updateDialectCount(data.detected_dialect);
-        }
-      } catch (err) {
-        replaceLastMessage('هناك خطب ما في التواصل', 'assistant');
-      }
-    });
-
-    function appendMessage(text, role) {
-      const div = document.createElement('div');
-      div.className = 'message ' + role;
-      div.textContent = text;
-      chat.appendChild(div);
-      chat.scrollTop = chat.scrollHeight;
+  // ✅ fixed selector logic
+  function replaceLastMessage(text) {
+    const messages = chat.querySelectorAll('.message.assistant');
+    if (messages.length > 0) {
+      const lastMsg = messages[messages.length - 1];
+      lastMsg.textContent = text;
+      lastMsg.className = 'message assistant';
     }
+  }
+</script>
 
-    function replaceLastMessage(text, role) {
-      const messages = chat.querySelectorAll('.message.assistant, .message.loading');
-      if (messages.length > 0) {
-        const lastMsg = messages[messages.length - 1];
-        lastMsg.textContent = text;
-        lastMsg.className = 'message assistant';
-      }
-    }
-  </script>
 </body>
 </html>
