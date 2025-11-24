@@ -847,6 +847,36 @@
       lastMsg.className = 'message assistant';
     }
   }
+
+      function changeBackgroundByDialect(region) {
+
+  const r = region.trim().toUpperCase();
+
+  if (r === "MSA") {
+    document.body.style.backgroundImage = "url('Map-0.png')";
+  }
+  else if (r === "GULF") {
+    document.body.style.backgroundImage = "url('Map-1.png')";
+  }
+  else if (r === "LEV") {
+    document.body.style.backgroundImage = "url('Map-2.png')";
+  }
+  else if (r === "NILE") {
+    document.body.style.backgroundImage = "url('Map-3.png')";
+  }
+  else if (r === "NA") {
+    document.body.style.backgroundImage = "url('Map-4.png')";
+  }
+  else if (r === "YEM") {
+    document.body.style.backgroundImage = "url('Map-5.png')";
+  }
+  else if (r === "IRAQ") {
+    document.body.style.backgroundImage = "url('Map-6.png')";
+  }
+  else {
+    console.warn("Unknown region:", region);
+  }
+}
 </script>
 
 </body>
