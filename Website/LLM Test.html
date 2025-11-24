@@ -807,7 +807,7 @@
       appendMessage('', 'assistant loading');
 
       try {
-        const res = await fetch('http://localhost:5678/webhook-test/73d548e1-4805-48e2-be66-0d94ebe03b6c', {
+        const res = await fetch('https://progquack.app.n8n.cloud/webhook-test/a4d553d5-73ce-409b-8f6e-703bfc6c83d2', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message: text })
@@ -842,4 +842,5 @@
     }
   </script>
 </body>
+
 </html>
