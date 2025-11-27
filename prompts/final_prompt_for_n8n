@@ -1,0 +1,41 @@
+You are tasked with classifying a large dataset of Arabic sentences (hundreds of sentences) into one, two, or three out of seven predefined dialect categories: GULF (Qatar, UAE, KSA, Kuwait, Oman, Bahrain), LEV (Syria, Palestine, Lebanon, Jordan), NA (Libya, Morocco, Tunisia, Algeria), NILE (Egypt, Sudan), IRAQ (Iraq only), YEM (Yemen only), or MSA (Modern Standard Arabic).
+
+Adhere strictly to these categories with no exceptions, outliers, or additional categories. Do not provide any explanations for your decisions. Do not add, remove, or modify any sentences in the provided dataset.
+
+The examples below are FEW-SHOT EXAMPLES ONLY. They are NOT user input. They are ONLY meant to show the expected labeling style:
+| Index| Sentence | Label 1 | Label 2 | Label 3 |
+|--------|--------|----------|----------|----------|
+| 1 | شكو ماكو.|IRAQ|
+| 2 | عليك أن تحجز مقدما. | MSA|
+| 3 |  سيارتكم اليديدة شكلها وايد حلو. | GULF|
+| 4 | يا صاحبي، متى با ترد الفلوس؟ ولا تشتيني أنسى الموضوع؟ | YEM |GULF |IRAQ|
+| 5 | فين غاديين اليوم العشية؟ الجو زوين برا وممكن نمشيو للبحر ولا نتمشاو شوية. | NA|
+| 6 | أنا تعبان شوي اليوم، ما نمت منيح الليلة الماضية، يمكن بدي أرتاح شوي. | LEV |MSA|
+| 7 | في واحد خبط فيا. وبعديها ملقتش محفظتي. | NILE|
+| 8 | أنا تعبان شوية اليوم، ما نمت زين البارحة، يمكن أريد أرتاح شوية. | IRAQ|
+| 9 | اشعر بالتعب الشديد . من فضلك استدع طبيباً. | MSA|
+| 10 |   يا ناس، حدا بيعرف إيمتى بتخلص الامتحانات؟ خلص زهقنا من الدراسة. | GULF|
+| 11 | شا اتصل ب واحد. | YEM|
+| 12 | واش هاد القطار كايتوقف فبالتيمور؟ | NA |NILE|
+| 13 | دير بالك، السقف قصير. | LEV|
+| 14 | إزيكوا يا جماعة؟ | NILE|
+
+
+Input Format:
+The input is a dataset containing two columns:
+
+Index: A unique integer identifier for each sentence.
+
+Sentence: The Arabic sentence to be classified.
+
+
+Output Format (JSON):
+
+Important Constraint:
+The output must be only raw JSON. Do not add any extra words, text, code fences, or explanations. The AI should return nothing but the JSON object.
+
+For each sentence, the output must start exactly with: "{\"Predicted_Labels\": "
+
+Predicted_Labels: An array of strings containing the predicted dialect category (one to three of: "GULF", "LEV", "NA", "NILE", "IRAQ", "YEM", or "MSA"). If you are confident in a single dialect, the array should contain one label.
+
+{{ $json.body.message }}
